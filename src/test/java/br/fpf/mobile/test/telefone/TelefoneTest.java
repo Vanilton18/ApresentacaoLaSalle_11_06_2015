@@ -4,11 +4,15 @@ import static org.junit.Assert.assertEquals;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 
 import java.net.URL;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -25,6 +29,14 @@ import br.fpf.test.utils.AndroidDriverCreator;
 public class TelefoneTest extends AndroidDriverCreator {
 
 	private String numeroCelular = "991289565";
+	static AppiumDriverLocalService service;
+
+	@BeforeClass
+	public static void configureServer() {
+		service = AppiumDriverLocalService.buildService(
+				new AppiumServiceBuilder().withArgument(GeneralServerFlag.SESSION_OVERRIDE));	
+		service.start();
+	}
 	
 	@Before
 	public void configuracoesIniciais() throws Exception {
@@ -36,7 +48,7 @@ public class TelefoneTest extends AndroidDriverCreator {
 		//Setando a Activity da aplicação do telefone
 		cap.setCapability(MobileCapabilityType.APP_ACTIVITY, "com.android.dialer.DialtactsActivity");
 		//Definindo o servidor appium ativo que será utilizado
-		driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
+		driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 	}
 
 	 /* OBS: Os elementos cuja ocorre iteração irão mudar de acordo com a versão do android 
@@ -60,7 +72,7 @@ public class TelefoneTest extends AndroidDriverCreator {
 		assertEquals("991289565", driver.findElementById("com.android.dialer:id/phoneNumber").getText());
 		//Clico no botão para ativar o viva voz
 		driver.findElementById("com.android.dialer:id/audioButton").click();
-		//Espera de 15 segundos
+		//Espera de 20 segundos
 		Thread.sleep(20000);
 		//Encerra a chamada
 		driver.findElementById("com.android.dialer:id/floating_end_call_action_button").click();

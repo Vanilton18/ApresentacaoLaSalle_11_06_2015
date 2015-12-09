@@ -4,12 +4,16 @@ import static org.junit.Assert.assertEquals;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 
 import java.io.File;
 import java.net.URL;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -25,6 +29,14 @@ import br.fpf.test.utils.Utils;
 public class ConsumoGasolinaTest extends AndroidDriverCreator {
 
 	File app = new File("apk/ConsumoGasolina.apk");
+	static AppiumDriverLocalService service;
+
+	@BeforeClass
+	public static void configureServer() {
+		service = AppiumDriverLocalService.buildService(
+				new AppiumServiceBuilder().withArgument(GeneralServerFlag.SESSION_OVERRIDE));	
+		service.start();
+	}
 	
 	@Before
 	public void configuracoesIniciais() throws Exception {
@@ -32,7 +44,7 @@ public class ConsumoGasolinaTest extends AndroidDriverCreator {
 		cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
 		cap.setCapability(MobileCapabilityType.DEVICE_NAME, "Android");
 		cap.setCapability(MobileCapabilityType.APP, app);
-		driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
+		driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 	}
 
 	@Test

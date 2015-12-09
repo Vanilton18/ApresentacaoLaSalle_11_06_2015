@@ -5,8 +5,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <properties>
 		<junit.version>4.12</junit.version>
-		<selenium.version>2.45.0</selenium.version>
-		<appium.version>2.2.0</appium.version>
+		<selenium.version>2.48.2</selenium.version>
+		<appium.version>3.2.0</appium.version>
 	</properties>
 
 	<dependencies>
